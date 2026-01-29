@@ -89,16 +89,17 @@ fi
 info "Installing samaritan-memory-mcp..."
 pip install --quiet "git+${REPO}" 2>/dev/null || pip install "git+${REPO}"
 
-# Verify install
-if ! command -v samaritan-memory &>/dev/null; then
-    # Check if it's in a pip --user path
-    SAMARITAN_CMD="$(python3 -c 'import shutil; print(shutil.which("samaritan-memory") or "")' 2>/dev/null)"
-    if [[ -z "$SAMARITAN_CMD" ]]; then
-        SAMARITAN_CMD="python3 -m samaritan_memory.server"
-        warn "samaritan-memory not on PATH, using: $SAMARITAN_CMD"
-    fi
+# Verify install — always resolve to absolute path for Claude Desktop compatibility
+# Claude Desktop only searches a limited PATH (/usr/local/bin, /opt/homebrew/bin, etc.)
+SAMARITAN_CMD="$(python3 -c 'import shutil; print(shutil.which("samaritan-memory") or "")' 2>/dev/null)"
+if [[ -n "$SAMARITAN_CMD" ]]; then
+    # Use absolute path to the binary
+    info "Found binary at: $SAMARITAN_CMD"
 else
-    SAMARITAN_CMD="samaritan-memory"
+    # Fall back to full python path + module
+    PYTHON_PATH="$(which python3)"
+    SAMARITAN_CMD="$PYTHON_PATH -m samaritan_memory"
+    warn "samaritan-memory not found on PATH, using: $SAMARITAN_CMD"
 fi
 
 info "Installed. Command: $SAMARITAN_CMD"
