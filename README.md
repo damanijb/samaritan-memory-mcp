@@ -13,18 +13,32 @@ Hybrid memory system for AI agents, exposed as an [MCP](https://modelcontextprot
 - **Neo4j** running (graph database)
 - **vLLM** with reranker model (optional, for better search relevance)
 
-## Install
+## Quick Setup
+
+One command to install and configure for Claude Code and/or Claude Desktop:
 
 ```bash
-pip install git+https://github.com/damanibrown/samaritan-memory-mcp.git
+curl -fsSL https://raw.githubusercontent.com/damanijb/samaritan-memory-mcp/main/setup.sh | bash -s -- --both --neo4j-password YOUR_PASSWORD
 ```
 
-Or clone and install locally:
+Or with custom backend URLs (e.g., pointing to a Tailscale server):
 
 ```bash
-git clone https://github.com/damanibrown/samaritan-memory-mcp.git
-cd samaritan-memory-mcp
-pip install -e .
+curl -fsSL https://raw.githubusercontent.com/damanijb/samaritan-memory-mcp/main/setup.sh | bash -s -- \
+  --both \
+  --neo4j-password YOUR_PASSWORD \
+  --qdrant-url http://samaritan.tail8478e1.ts.net:6333 \
+  --ollama-url http://samaritan.tail8478e1.ts.net:11434 \
+  --neo4j-uri bolt://samaritan.tail8478e1.ts.net:7687
+
+```
+
+Flags: `--claude-code`, `--claude-desktop`, `--both`, `--yes` (skip prompts).
+
+## Manual Install
+
+```bash
+pip install git+https://github.com/damanijb/samaritan-memory-mcp.git
 ```
 
 ## Configuration
