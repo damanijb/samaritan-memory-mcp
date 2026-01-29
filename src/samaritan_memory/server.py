@@ -333,7 +333,13 @@ async def _main():
 
 
 def main():
-    asyncio.run(_main())
+    import sys
+    import traceback
+    try:
+        asyncio.run(_main())
+    except Exception:
+        traceback.print_exc(file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
